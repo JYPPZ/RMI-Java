@@ -1,5 +1,6 @@
 package controlador.plc_mms.sop_rmi;
 
+import controlador.ControladorConsultar;
 import controlador.ControladorPanel;
 import controlador.ControladorRegistrar;
 import controlador.plc_tu.sop_rmi.CallBackImp;
@@ -81,13 +82,18 @@ public class IniciarSesion implements ActionListener {
         ClienteSesion clienteSesionForm = new ClienteSesion();
         PanelPrincipal panelPrincipalForm = new PanelPrincipal();
         AgregarPlc agregarPlcForm = new AgregarPlc();
-        ConsultarPlc consultarPlcForm = new ConsultarPlc();
         EditarPlc editarPlcForm = new EditarPlc();
         EliminarPlc eliminarPlcForm = new EliminarPlc();
+        GestionPlcTuImp gestionPlcTuImp = new GestionPlcTuImp();
+        GestionUsuariosImp gestionUsuariosImp = new GestionUsuariosImp();
+        ConsultarPlc consultarPlcForm = new ConsultarPlc();
 
         IniciarSesion iniciarSesion = new IniciarSesion(clienteSesionForm, panelPrincipalForm);
         ControladorPanel controladorPanel = new ControladorPanel(panelPrincipalForm, agregarPlcForm, consultarPlcForm, editarPlcForm, eliminarPlcForm);
-        ControladorRegistrar controladorRegistrar = new ControladorRegistrar(agregarPlcForm, new GestionPlcTuImp(), new GestionUsuariosImp());
+        ControladorRegistrar controladorRegistrar = new ControladorRegistrar(agregarPlcForm, gestionPlcTuImp, gestionUsuariosImp);
+        ControladorConsultar controladorConsultar = new ControladorConsultar(gestionPlcTuImp, gestionUsuariosImp, consultarPlcForm);
+
+
         //Se obtiene el objeto remoto
         String direccionIpRMIRegistry = "localhost";
         int numPuertoRMIRegistry = 2024;

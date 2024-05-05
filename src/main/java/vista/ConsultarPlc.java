@@ -1,5 +1,7 @@
 package vista;
 
+import controlador.ControladorConsultar;
+
 import javax.swing.*;
 
 public class ConsultarPlc extends JFrame {
@@ -11,15 +13,17 @@ public class ConsultarPlc extends JFrame {
     public JLabel lblFecha;
     public JLabel lblLectura;
     public JLabel lblConsumo;
-    public JComboBox cmbId;
+    public JComboBox<String> cmbId;
     public JButton btnConsultar;
     public JButton btnVolver;
     public JPanel PanelConsultarPlc;
-
+    //ControladorConsultar controlador;
     public ConsultarPlc(){
         setLocationRelativeTo(null);
         setSize(350, 320);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(PanelConsultarPlc);
+//        controlador = new ControladorConsultar(null, null, this);
+//        controlador.cargarIdPlc();
     }
 }

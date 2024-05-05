@@ -11,14 +11,14 @@ import java.awt.event.ActionListener;
 import java.util.Objects;
 
 public class ControladorRegistrar implements ActionListener {
-    private final IGestionPlcTu plcTu;
+    private final IGestionPlcTu gestionPlcTu;
     private final IGestionUsuarios gestionUsuarios;
     private final AgregarPlc agregarPlcForm;
     //int contador;
 
-    public ControladorRegistrar(AgregarPlc agregarPlcForm, IGestionPlcTu plcTu, IGestionUsuarios gestionUsuarios) {
+    public ControladorRegistrar(AgregarPlc agregarPlcForm, IGestionPlcTu gestionPlcTu, IGestionUsuarios gestionUsuarios) {
         this.agregarPlcForm = agregarPlcForm;
-        this.plcTu = plcTu;
+        this.gestionPlcTu = gestionPlcTu;
         this.gestionUsuarios = gestionUsuarios;
         agregarPlcForm.btnGuardar.addActionListener(this);
         agregarPlcForm.btnVolver.addActionListener(this);
@@ -51,14 +51,14 @@ public class ControladorRegistrar implements ActionListener {
             PlcTuDTO plcTuDTO = new PlcTuDTO(nombre, tipoId, numId, direccionResidencia, estrato, fechaRegistro, lectura);
 
             // Creación del PLC_TU
-            String id = plcTu.crear(plcTuDTO);
+            String id = gestionPlcTu.crear(plcTuDTO);
 
             // Mensaje de resultado
             String mensaje = id.isEmpty() ? "PLC_TU NO Creado" : "PLC_TU Creado con ID: " + id;
             JOptionPane.showMessageDialog(null, mensaje);
 
             // Envío de mensaje si corresponde
-            if (plcTu.obtenerNum() == 4) {
+            if (gestionPlcTu.obtenerNum() == 4) {
                 gestionUsuarios.enviarMensaje("La factura del PLC_TU id: " + id + " está lista, y ya puede ser consultada", 2);
             }
 
