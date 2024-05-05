@@ -3,10 +3,10 @@ package vista;
 import javax.swing.*;
 
 public class EliminarPlc extends JFrame{
-    private JComboBox cmbId;
-    private JButton btnEliminar;
-    private JButton btnVolver;
-    private JPanel PanelEliminarPlc;
+    public JComboBox<String> cmbId;
+    public JButton btnEliminar;
+    public JButton btnVolver;
+    public JPanel PanelEliminarPlc;
 
     public EliminarPlc(){
         setLocationRelativeTo(null);

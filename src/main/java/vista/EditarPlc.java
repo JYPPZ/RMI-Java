@@ -5,18 +5,19 @@ import java.awt.*;
 
 public class EditarPlc extends JFrame {
 
-    public JComboBox cmbId;
+    public JComboBox<String> cmbId;
     public JButton btnGuardar;
     public JButton btnVolver;
     public JTextField tfConsumo;
     public JTextField tfNombre;
     public JTextField tfNumeroIdentificacion;
     public JTextField tfDireccion;
-    public JComboBox cmbTipoIdentificacion;
-    public JComboBox cmbEstrato;
+    public JComboBox<String> cmbTipoIdentificacion;
+    public JComboBox<String> cmbEstrato;
     public JTextField tfFecha;
     public JTextField tfLectura;
     public JPanel PanelEditarPlc;
+    public JButton btnConsultar;
 
     public EditarPlc(){
         setLocationRelativeTo(null);

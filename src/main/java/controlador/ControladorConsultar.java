@@ -8,6 +8,8 @@ import vista.ConsultarPlc;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Objects;
@@ -23,17 +25,16 @@ public class ControladorConsultar implements ActionListener {
         this.gestionPlcTu = gestionPlcTu;
         this.gestionUsuarios = gestionUsuarios;
         this.consultarPlcForm = consultarPlcForm;
+        // action listeners
         consultarPlcForm.btnConsultar.addActionListener(this);
         consultarPlcForm.btnVolver.addActionListener(this);
-        // cargar JComboBox
-        cargarIdPlc();
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == consultarPlcForm.btnVolver){
-            consultarPlcForm.setVisible(false);
+            consultarPlcForm.dispose();
         }if (e.getSource() == consultarPlcForm.btnConsultar){
             consultarPlc();
         }
@@ -44,7 +45,6 @@ public class ControladorConsultar implements ActionListener {
      */
     public void consultarPlc(){
         try {
-
             // Obtener el ID del PLC seleccionado
             String idPlc = (String) consultarPlcForm.cmbId.getSelectedItem();
 
@@ -67,24 +67,6 @@ public class ControladorConsultar implements ActionListener {
             JOptionPane.showMessageDialog(null, "No se pudo consultar el PLC", "Error", JOptionPane.ERROR_MESSAGE);
         }catch (Exception exception){
             JOptionPane.showMessageDialog(null,  "Error -> "  + exception.getLocalizedMessage());
-        }
-    }
-
-    /**
-     * Método para cargar los IDs de los PLCs en el ComboBox.
-     */
-    public void cargarIdPlc() {
-        try {
-            // Obtener los IDs del PLC desde el gestor de PLC
-            List<String> listaIds = gestionPlcTu.devolverIds(0);
-
-            // Devolver la lista de IDs
-            for (String id : listaIds)
-                consultarPlcForm.cmbId.addItem(id);
-
-        } catch (Exception ex) {
-            Logger.getLogger(ControladorConsultar.class.getName()).log(Level.SEVERE, "Error al buscar IDs de PLC");
-            JOptionPane.showMessageDialog(null, "No se pudo encontrar los PLCs: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

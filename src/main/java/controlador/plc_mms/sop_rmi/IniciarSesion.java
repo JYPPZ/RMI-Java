@@ -1,6 +1,7 @@
 package controlador.plc_mms.sop_rmi;
 
 import controlador.ControladorConsultar;
+import controlador.ControladorEditar;
 import controlador.ControladorPanel;
 import controlador.ControladorRegistrar;
 import controlador.plc_tu.sop_rmi.CallBackImp;
@@ -78,7 +79,7 @@ public class IniciarSesion implements ActionListener {
 
 
     public static void main(String[] args) throws RemoteException {
-        //Se crean los objetos necesarios
+        // Se crean los objetos necesarios
         ClienteSesion clienteSesionForm = new ClienteSesion();
         PanelPrincipal panelPrincipalForm = new PanelPrincipal();
         AgregarPlc agregarPlcForm = new AgregarPlc();
@@ -87,19 +88,22 @@ public class IniciarSesion implements ActionListener {
         GestionPlcTuImp gestionPlcTuImp = new GestionPlcTuImp();
         GestionUsuariosImp gestionUsuariosImp = new GestionUsuariosImp();
         ConsultarPlc consultarPlcForm = new ConsultarPlc();
-
+        // controladores necesarios
         IniciarSesion iniciarSesion = new IniciarSesion(clienteSesionForm, panelPrincipalForm);
-        ControladorPanel controladorPanel = new ControladorPanel(panelPrincipalForm, agregarPlcForm, consultarPlcForm, editarPlcForm, eliminarPlcForm);
+        ControladorPanel controladorPanel = new ControladorPanel(panelPrincipalForm, agregarPlcForm,
+                consultarPlcForm, editarPlcForm, eliminarPlcForm, gestionPlcTuImp);
         ControladorRegistrar controladorRegistrar = new ControladorRegistrar(agregarPlcForm, gestionPlcTuImp, gestionUsuariosImp);
         ControladorConsultar controladorConsultar = new ControladorConsultar(gestionPlcTuImp, gestionUsuariosImp, consultarPlcForm);
-
-
-        //Se obtiene el objeto remoto
+        ControladorEditar controladorEditar = new ControladorEditar(gestionPlcTuImp, editarPlcForm);
+        // Se obtiene el objeto remoto
         String direccionIpRMIRegistry = "localhost";
         int numPuertoRMIRegistry = 2024;
         gestionUsuarios = (IGestionUsuarios) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry,
                 numPuertoRMIRegistry, "GestionUsuarios");
-         // Se muestra la ventana de inicio de sesión
+
+
+        // Se muestra la ventana de inicio de sesión
         clienteSesionForm.setVisible(true);
     }
+
 }

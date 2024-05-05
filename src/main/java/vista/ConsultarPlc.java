@@ -17,13 +17,13 @@ public class ConsultarPlc extends JFrame {
     public JButton btnConsultar;
     public JButton btnVolver;
     public JPanel PanelConsultarPlc;
-    //ControladorConsultar controlador;
+
     public ConsultarPlc(){
         setLocationRelativeTo(null);
         setSize(350, 320);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(PanelConsultarPlc);
-//        controlador = new ControladorConsultar(null, null, this);
+//        ControladorConsultar controlador = new ControladorConsultar(null, null, this);
 //        controlador.cargarIdPlc();
     }
 }
