@@ -10,9 +10,7 @@ public class ServidorGrsaa {
         int numPuertoNS;
         String direccionNS;
 
-        System.out.println("Cual es el la dirección ip donde se encuentra  el n_s");
         direccionNS = "localhost";
-        System.out.println("Cual es el número de puerto por el cual escucha el n_s");
         numPuertoNS = 2025;
 
         GestionConsumoPlc objRemoto = new GestionConsumoPlc();

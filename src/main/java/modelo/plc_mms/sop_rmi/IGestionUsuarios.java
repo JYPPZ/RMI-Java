@@ -15,7 +15,6 @@ import modelo.plc_mms.dto.UsuarioDTO;
 public interface IGestionUsuarios extends Remote{
     int abrirSesion(UsuarioDTO objUsuario) throws RemoteException;
     UsuarioDTO consultarUsuario(int id) throws RemoteException;
-    
     void enviarMensaje(String mensaje, int id)throws RemoteException;
     boolean registrarUsuario(UsuarioDTO usuario) throws RemoteException;
     

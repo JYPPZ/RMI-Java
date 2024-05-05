@@ -22,10 +22,15 @@ public class GestionUsuariosImp extends UnicastRemoteObject implements IGestionU
         usuariosRegistrados = new HashMap<>();
         usuariosRegistrados.put(0, new UsuarioDTO(0, "Operador", "admin-oper", "admin-oper"));
         usuariosRegistrados.put(1, new UsuarioDTO(1, "Administrador", "admin", "admin"));
-        usuariosRegistrados.put(2,new UsuarioDTO(2, "invitado", "invitado", "invitado"));
+        //usuariosRegistrados.put(2,new UsuarioDTO(2, "invitado", "invitado", "invitado"));
     }
 
-
+    /**
+     * Método para abrir sesión en el sistema.
+     * @param objUsuario usuario
+     * @return id de usuario
+     * @throws RemoteException excepcion
+     */
     @Override
     public int abrirSesion(UsuarioDTO objUsuario) throws RemoteException {
         System.out.println("Intento de inicio de sesión: " + objUsuario.getUsuario());

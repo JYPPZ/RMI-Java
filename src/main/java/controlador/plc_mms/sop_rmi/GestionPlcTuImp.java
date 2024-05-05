@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controlador.plc_mms.sop_rmi;
 
 import controlador.plc_tu.utilidades.UtilidadesRegistroC;
@@ -13,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +18,7 @@ import java.util.logging.Logger;
 
 public class GestionPlcTuImp extends UnicastRemoteObject implements IGestionPlcTu {
 
-    private static int contador = 1;
+    //private static int contador = 1;
     private List<PlcTuDTO> listaPlcs = new ArrayList<>();
     private IGestionConsumoPlc gestionConsumo;
 
@@ -65,6 +62,12 @@ public class GestionPlcTuImp extends UnicastRemoteObject implements IGestionPlcT
         return null;
     }
 
+    /**
+     * Método para eliminar un PLC de la lista.
+     * @param id ID del PLC a eliminar.
+     * @return true si se eliminó correctamente, false en caso contrario.
+     * @throws RemoteException
+     */
     @Override
     public boolean eliminar(String id) throws RemoteException {
         for (int i = 0; i < listaPlcs.size(); i++) {
@@ -76,11 +79,15 @@ public class GestionPlcTuImp extends UnicastRemoteObject implements IGestionPlcT
         return false;
     }
 
+    /**
+     * Método para generar un ID aleatorio para los PLCs.
+     * @return ID generado.
+     */
     public static String generarID() {
         String prefijo = "plc_tu";
-        String numero = String.format("%02d", contador);
-        contador++;
-        return prefijo + numero;
+        int numero = new Random().nextInt(99) + 1; // Genera un número aleatorio entre 1 y 99
+        String numeroFormateado = String.format("%02d", numero); // Formatea el número para que tenga dos dígitos
+        return prefijo + numeroFormateado;
     }
 
     @Override

@@ -2,16 +2,24 @@ package vista;
 
 import javax.swing.*;
 
-public class ConsultarPlc {
-    private JLabel lblNombre;
-    private JLabel lblTipoIdentificacion;
-    private JLabel lblNumeroIdentificacion;
-    private JLabel lblDireccion;
-    private JLabel lblEstrato;
-    private JLabel lblFecha;
-    private JLabel lblLectura;
-    private JLabel lblConsumo;
-    private JComboBox cmbId;
-    private JButton btnConsultar;
-    private JButton btnVolver;
+public class ConsultarPlc extends JFrame {
+    public JLabel lblNombre;
+    public JLabel lblTipoIdentificacion;
+    public JLabel lblNumeroIdentificacion;
+    public JLabel lblDireccion;
+    public JLabel lblEstrato;
+    public JLabel lblFecha;
+    public JLabel lblLectura;
+    public JLabel lblConsumo;
+    public JComboBox cmbId;
+    public JButton btnConsultar;
+    public JButton btnVolver;
+    public JPanel PanelConsultarPlc;
+
+    public ConsultarPlc(){
+        setLocationRelativeTo(null);
+        setSize(350, 320);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(PanelConsultarPlc);
+    }
 }

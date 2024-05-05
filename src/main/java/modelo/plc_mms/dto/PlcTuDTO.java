@@ -6,11 +6,9 @@ package modelo.plc_mms.dto;
 
 import java.io.Serializable;
 
-
-
 /**
+ * Clase que representa un PLC_TU
  *
- * @author ideapad330S
  */
 public class PlcTuDTO implements Serializable {
     private String id;  
@@ -19,7 +17,7 @@ public class PlcTuDTO implements Serializable {
     private String numId;
     private String direccionResidencia;
     private int estrato;
-    private  String fechaRegistro;
+    private String fechaRegistro;
     private int lectura;
 
     public PlcTuDTO(){
@@ -35,20 +33,6 @@ public class PlcTuDTO implements Serializable {
         this.fechaRegistro = fechaRegistro;
         this.lectura = lectura;
     }
-    
-    
-    public PlcTuDTO(String id, String nombrePropetario, String tipoId, String numId, String direccionResidencia, int estrato, String fechaRegistro, int lectura) {
-        this.id = id;
-        this.nombrePropetario = nombrePropetario;
-        this.tipoId = tipoId;
-        this.numId = numId;
-        this.direccionResidencia = direccionResidencia;
-        this.estrato = estrato;
-        this.fechaRegistro = fechaRegistro;
-        this.lectura = lectura;
-    }
-    
-    
 
     public String getId() {
         return id;
