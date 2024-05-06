@@ -1,7 +1,6 @@
 package controlador;
 
 import controlador.plc_tu.utilidades.UtilidadesRegistroC;
-import modelo.plc_mms.dto.UsuarioDTO;
 import modelo.plc_mms.sop_rmi.IGestionPlcTu;
 import vista.*;
 
@@ -13,49 +12,53 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ControladorPanel implements ActionListener {
-    private final PanelPrincipal panelPrincipalForm;
+public class ControladorPanelCeo implements ActionListener {
+    private final PanelCeo panelCeoForm;
     private final AgregarPlc agregarPlcForm;
     private final ConsultarPlc consultarPlcForm;
     private final EditarPlc editarPlcForm;
     private final EliminarPlc eliminarPlcForm;
-    private IGestionPlcTu gestionPlcTu;
-
-    public ControladorPanel(PanelPrincipal panelPrincipalForm, AgregarPlc agregarPlcForm, ConsultarPlc consultarPlcForm, EditarPlc editarPlcForm, EliminarPlc eliminarPlcForm,
-                            IGestionPlcTu gestionPlcTu) throws RemoteException {
-        this.panelPrincipalForm = panelPrincipalForm;
+    private static IGestionPlcTu gestionPlcTu;
+    public ControladorPanelCeo(PanelCeo panelCeoForm, AgregarPlc agregarPlcForm,
+                               ConsultarPlc consultarPlcForm, EditarPlc editarPlcForm,
+                               EliminarPlc eliminarPlcForm) throws RemoteException {
+        this.panelCeoForm = panelCeoForm;
         this.agregarPlcForm = agregarPlcForm;
         this.consultarPlcForm = consultarPlcForm;
         this.editarPlcForm = editarPlcForm;
         this.eliminarPlcForm = eliminarPlcForm;
-        this.gestionPlcTu = gestionPlcTu;
-        panelPrincipalForm.btnRegistrar.addActionListener(this);
-        panelPrincipalForm.btnConsultar.addActionListener(this);
-        panelPrincipalForm.btnSalir.addActionListener(this);
-        panelPrincipalForm.btnEditar.addActionListener(this);
-        panelPrincipalForm.btnEliminar.addActionListener(this);
-        //iniciar obj remoto
+        //ControladorPanel.gestionPlcTu = gestionPlcTu;
+        //gestionPlcTu = new GestionPlcTuImp();
+        panelCeoForm.btnRegistrar.addActionListener(this);
+        panelCeoForm.btnConsultar.addActionListener(this);
+        panelCeoForm.btnSalir.addActionListener(this);
+        panelCeoForm.btnEditar.addActionListener(this);
+        panelCeoForm.btnEliminar.addActionListener(this);
+
         iniciar();
     }
 
+    public static IGestionPlcTu getGestionPlcTu() {
+        return gestionPlcTu;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == panelPrincipalForm.btnRegistrar) {
+        if (e.getSource() == panelCeoForm.btnRegistrar) {
             agregarPlcForm.setVisible(true);
         }
-        if (e.getSource() == panelPrincipalForm.btnConsultar) {
+        if (e.getSource() == panelCeoForm.btnConsultar) {
             consultarPlcForm.setVisible(true);
             cargarIdPlc();
         }
-        if (e.getSource() == panelPrincipalForm.btnSalir) {
-            panelPrincipalForm.dispose();
+        if (e.getSource() == panelCeoForm.btnSalir) {
+            panelCeoForm.dispose();
         }
-        if (e.getSource() == panelPrincipalForm.btnEditar) {
+        if (e.getSource() == panelCeoForm.btnEditar) {
             editarPlcForm.setVisible(true);
             cargarIdPlc();
         }
-        if (e.getSource() == panelPrincipalForm.btnEliminar) {
+        if (e.getSource() == panelCeoForm.btnEliminar) {
             eliminarPlcForm.setVisible(true);
             cargarIdPlc();
         }
@@ -68,7 +71,8 @@ public class ControladorPanel implements ActionListener {
         try {
             // Obtener los IDs del PLC desde el gestor de PLC
             List<String> listaIds = gestionPlcTu.devolverIds(0);
-
+            //
+            System.out.println("Lista de IDs: " + listaIds);
             // limpiar caja
             consultarPlcForm.cmbId.removeAllItems();
             editarPlcForm.cmbId.removeAllItems();
@@ -92,10 +96,14 @@ public class ControladorPanel implements ActionListener {
      * @throws RemoteException Excepción de conexión.
      */
     public void iniciar() throws RemoteException{
-        String direccionIpRMIRegistry = "localhost";
-        int numPuertoRMIRegistry = 2025;
+        try {
+            String direccionIpRMIRegistry = "localhost";
+            int numPuertoRMIRegistry = 2025;
 
-        gestionPlcTu = (IGestionPlcTu) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry, numPuertoRMIRegistry,
-                "GestionPLC_TU");
+            gestionPlcTu = (IGestionPlcTu) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry, numPuertoRMIRegistry,
+                    "GestionPLC_TU");
+        } catch (Exception ex) {
+            Logger.getLogger(ControladorPanelCeo.class.getName()).log(Level.SEVERE, "Error al iniciar el objeto remoto");
+        }
     }
 }

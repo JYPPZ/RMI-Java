@@ -26,6 +26,10 @@ public class UsuarioDTO implements Serializable {
         this.clave = clave;
     }
 
+    public UsuarioDTO() {
+
+    }
+
 
     public int getId() {
         return id;

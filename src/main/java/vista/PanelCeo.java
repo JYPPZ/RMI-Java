@@ -2,7 +2,7 @@ package vista;
 
 import javax.swing.*;
 
-public class PanelPrincipal extends JFrame {
+public class PanelCeo extends JFrame {
 
     // Inicializar los componentes
     public JButton btnRegistrar;
@@ -12,7 +12,7 @@ public class PanelPrincipal extends JFrame {
     public JButton btnSalir;
     public JPanel jpPanelPrincipal;
 
-    public PanelPrincipal(){
+    public PanelCeo(){
         setLocationRelativeTo(null);
         setSize(350, 320);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
