@@ -13,7 +13,8 @@ public class principal {
         clienteSesionForm.setVisible(true); //visualizar la ventana login
         PanelCeo panelCeoForm = new PanelCeo(); // panel Ceo
         PanelAdmin panelAdminForm = new PanelAdmin(); // panel Admin
-        IniciarSesion iniciarSesion = new IniciarSesion(clienteSesionForm, panelCeoForm, panelAdminForm); // inicializar el controlador principal
+        PanelUsuario panelUsuarioForm = new PanelUsuario(); // panel Usuario
+        IniciarSesion iniciarSesion = new IniciarSesion(clienteSesionForm, panelCeoForm, panelAdminForm, panelUsuarioForm); // inicializar el controlador principal
 
     }
 }

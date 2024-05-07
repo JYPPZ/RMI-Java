@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controlador.plc_tu.sop_rmi.CallBackImp;
 import modelo.plc_mms.dto.UsuarioDTO;
 import modelo.plc_mms.sop_rmi.IGestionUsuarios;
 import modelo.plc_tu.sop_rmi.ICallback;
@@ -20,9 +21,9 @@ public class GestionUsuariosImp extends UnicastRemoteObject implements IGestionU
     public GestionUsuariosImp() throws RemoteException {
         super();
         usuariosRegistrados = new HashMap<>();
-        usuariosRegistrados.put(0, new UsuarioDTO(0, "Operador", "admin-oper", "admin-oper"));
-        usuariosRegistrados.put(1, new UsuarioDTO(1, "Administrador", "admin", "admin"));
-        //usuariosRegistrados.put(2,new UsuarioDTO(2, "invitado", "invitado", "invitado"));
+        usuariosRegistrados.put(0, new UsuarioDTO(0, "Operador", "admin-oper", "admin-oper", new CallBackImp()));
+        usuariosRegistrados.put(1, new UsuarioDTO(1, "Administrador", "admin", "admin", new CallBackImp()));
+        usuariosRegistrados.put(2, new UsuarioDTO(2, "invitado", "invitado", "invitado", new CallBackImp()));
     }
 
     /**
@@ -53,7 +54,7 @@ public class GestionUsuariosImp extends UnicastRemoteObject implements IGestionU
     
         @Override
     public void enviarMensaje(String mensaje, int id) throws RemoteException {
-        System.out.println("EnviarMensaje");
+        //System.out.println("EnviarMensaje");
         notificarUsuarios(mensaje, id);
     }
     

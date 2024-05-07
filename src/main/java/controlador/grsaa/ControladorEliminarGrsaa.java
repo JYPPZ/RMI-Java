@@ -1,4 +1,4 @@
-package controlador;
+package controlador.grsaa;
 
 import modelo.grsaa.sop_rmi.IGestionConsumoPlc;
 import vista.EliminarPlcGrsaa;

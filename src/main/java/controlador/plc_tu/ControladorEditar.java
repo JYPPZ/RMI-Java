@@ -1,4 +1,4 @@
-package controlador;
+package controlador.plc_tu;
 
 import modelo.plc_mms.dto.PlcTuDTO;
 import modelo.plc_mms.sop_rmi.IGestionPlcTu;

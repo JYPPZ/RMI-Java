@@ -1,5 +1,6 @@
-package controlador;
+package controlador.grsaa;
 
+import controlador.plc_tu.ControladorConsultar;
 import modelo.grsaa.sop_rmi.IGestionConsumoPlc;
 import modelo.plc_mms.dto.PlcTuDTO;
 import vista.EditarPlcGrsaa;

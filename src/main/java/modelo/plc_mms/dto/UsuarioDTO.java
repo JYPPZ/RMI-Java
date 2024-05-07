@@ -26,10 +26,13 @@ public class UsuarioDTO implements Serializable {
         this.clave = clave;
     }
 
-    public UsuarioDTO() {
-
+    public UsuarioDTO(int id, String nombreCompleto, String usuario, String clave, ICallback callback) {
+        this.id = id;
+        this.nombreCompleto = nombreCompleto;
+        this.usuario = usuario;
+        this.clave = clave;
+        this.callback = callback;
     }
-
 
     public int getId() {
         return id;

@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 
 public class GestionPlcTuImp extends UnicastRemoteObject implements IGestionPlcTu {
 
-    //private static int contador = 1;
     private List<PlcTuDTO> listaPlcs = new ArrayList<>();
     private IGestionConsumoPlc gestionConsumo;
 
@@ -49,24 +48,28 @@ public class GestionPlcTuImp extends UnicastRemoteObject implements IGestionPlcT
     public PlcTuDTO editar(String id, PlcTuDTO objPlc) throws RemoteException {
         for (PlcTuDTO plc : listaPlcs) {
             if (plc.getId().equals(id)) {
-                plc.setEstrato(objPlc.getEstrato());
-                plc.setFechaRegistro(objPlc.getFechaRegistro());
-                plc.setLectura(objPlc.getLectura());
-                plc.setNombrePropetario(objPlc.getNombrePropetario());
-                plc.setTipoId(objPlc.getTipoId());
-                plc.setNumId(objPlc.getNumId());
-                plc.setDireccionResidencia(objPlc.getDireccionResidencia());
+                editar(objPlc, plc);
                 return plc;
             }
         }
         return null;
     }
 
+    public static void editar(PlcTuDTO objPlc, PlcTuDTO plc) {
+        plc.setEstrato(objPlc.getEstrato());
+        plc.setFechaRegistro(objPlc.getFechaRegistro());
+        plc.setLectura(objPlc.getLectura());
+        plc.setNombrePropetario(objPlc.getNombrePropetario());
+        plc.setTipoId(objPlc.getTipoId());
+        plc.setNumId(objPlc.getNumId());
+        plc.setDireccionResidencia(objPlc.getDireccionResidencia());
+    }
+
     /**
      * Método para eliminar un PLC de la lista.
      * @param id ID del PLC a eliminar.
      * @return true si se eliminó correctamente, false en caso contrario.
-     * @throws RemoteException
+     * @throws RemoteException Excepción de RMI.
      */
     @Override
     public boolean eliminar(String id) throws RemoteException {
@@ -105,10 +108,7 @@ public class GestionPlcTuImp extends UnicastRemoteObject implements IGestionPlcT
 
     @Override
     public FacturacionDTO facturarMesUsuario(String id) throws RemoteException {
-        if (id.equals(listaPlcs.get(0).getNumId())) {
-            return gestionConsumo.facturarMes();
-        }
-        return null;
+        return gestionConsumo.facturarMes();
     }
 
     @Override
@@ -149,7 +149,7 @@ public class GestionPlcTuImp extends UnicastRemoteObject implements IGestionPlcT
         }, 0, 240, TimeUnit.SECONDS);
         this.listaPlcs = gestionConsumo.devolverListaActual();
     }
-    
+
     @Override
     public int obtenerNum(){
         return listaPlcs.size();

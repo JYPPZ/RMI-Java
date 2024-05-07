@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import controlador.plc_mms.sop_rmi.GestionPlcTuImp;
 import modelo.grsaa.dto.FacturacionDTO;
 import modelo.plc_mms.dto.PlcTuDTO;
 import modelo.grsaa.sop_rmi.IGestionConsumoPlc;
@@ -32,7 +34,7 @@ public class GestionConsumoPlc extends UnicastRemoteObject implements IGestionCo
 
         this.listaPlcs = new ArrayList<>(listaPlcs); // Hacer una copia de la lista
         for (PlcTuDTO plc : this.listaPlcs) {
-            System.out.println("Nodo enviado: " + plc); // Asumiendo que PlcTuDTO tiene un toString() adecuado
+            System.out.println("Nodo enviado: " + plc);
             guardarTxt(plc.getId());
         }
         return this.listaPlcs;
@@ -51,7 +53,10 @@ public class GestionConsumoPlc extends UnicastRemoteObject implements IGestionCo
 
         PlcTuDTO objeto = consultar(id);
         String digitos = objeto.getId().substring(objeto.getId().length() - 2);
-        String nombreArchivo = "id" + String.format("%02d", 1) + "_" + "id" + digitos + ".txt";
+        String nombreBaseArchivo = "id" + String.format("%02d", 1) + "_" + "id" + digitos;
+
+        // Generar nombre de archivo único con marca de tiempo
+        String nombreArchivo = nombreBaseArchivo + "_" + SimpleDateFormat.DATE_FIELD + ".txt";
         String rutaDirectorio = "src/main/java/txts/";
         try {
             FileWriter escritor = getFileWriter(rutaDirectorio, nombreArchivo, objeto);
@@ -63,17 +68,26 @@ public class GestionConsumoPlc extends UnicastRemoteObject implements IGestionCo
     }
 
     private static FileWriter getFileWriter(String rutaDirectorio, String nombreArchivo, PlcTuDTO objeto) throws IOException {
-        File archivo = new File(rutaDirectorio + nombreArchivo);
-        FileWriter escritor = new FileWriter(archivo);
+        FileWriter escritor = null;
+        try {
+            File archivo = new File(rutaDirectorio + nombreArchivo);
+            escritor = new FileWriter(archivo);
 
-        escritor.write("ID: " + objeto.getId() + "\n");
-        escritor.write("Nombre propietario: " + objeto.getNombrePropetario() + "\n");
-        escritor.write("Tipo Id: " + objeto.getTipoId() + "\n");
-        escritor.write("Numero de identificación: " + objeto.getNumId() + "\n");
-        escritor.write("Dirección: " + objeto.getDireccionResidencia() + "\n");
-        escritor.write("Estrato: " + objeto.getEstrato() + "\n");
-        escritor.write("Fecha: " + objeto.getFechaRegistro() + "\n");
-        escritor.write("Lectura: " + objeto.getLectura() + "\n");
+            escritor.write("ID: " + objeto.getId() + "\n");
+            escritor.write("Nombre propietario: " + objeto.getNombrePropetario() + "\n");
+            escritor.write("Tipo Id: " + objeto.getTipoId() + "\n");
+            escritor.write("Numero de identificación: " + objeto.getNumId() + "\n");
+            escritor.write("Dirección: " + objeto.getDireccionResidencia() + "\n");
+            escritor.write("Estrato: " + objeto.getEstrato() + "\n");
+            escritor.write("Fecha: " + objeto.getFechaRegistro() + "\n");
+            escritor.write("Lectura: " + objeto.getLectura() + "\n");
+
+            escritor.close();
+            System.out.println("Objeto guardado en: " + nombreArchivo);
+        } catch (IOException e) {
+            Logger.getLogger(GestionConsumoPlc.class.getName()).log(Level.SEVERE, "Error al guardar el archivo", e);
+
+        }
         return escritor;
     }
 
@@ -91,13 +105,7 @@ public class GestionConsumoPlc extends UnicastRemoteObject implements IGestionCo
     public PlcTuDTO editar(String id, PlcTuDTO objPlc) throws RemoteException {
         for (PlcTuDTO plc : listaPlcs) {
             if (plc.getId().equals(id)) {
-                plc.setEstrato(objPlc.getEstrato());
-                plc.setFechaRegistro(objPlc.getFechaRegistro());
-                plc.setLectura(objPlc.getLectura());
-                plc.setNombrePropetario(objPlc.getNombrePropetario());
-                plc.setTipoId(objPlc.getTipoId());
-                plc.setNumId(objPlc.getNumId());
-                plc.setDireccionResidencia(objPlc.getDireccionResidencia());
+                GestionPlcTuImp.editar(objPlc, plc);
                 guardarTxt(plc.getId());
                 return plc;
             }
@@ -161,8 +169,8 @@ public class GestionConsumoPlc extends UnicastRemoteObject implements IGestionCo
         fac.setFechaRegistro(listaPlcs.get(tamanio).getFechaRegistro());
         fac.setLecturaInical(listaPlcs.get(0).getLectura());
         int lecturaFinal = 0;
-        for (int i = 0; i < listaPlcs.size(); i++) {
-            lecturaFinal += listaPlcs.get(i).getLectura();
+        for (PlcTuDTO listaPlc : listaPlcs) {
+            lecturaFinal += listaPlc.getLectura();
         }
         fac.setLecturaFinal(lecturaFinal);
         int costo;

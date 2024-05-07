@@ -1,4 +1,4 @@
-package controlador;
+package controlador.plc_tu;
 
 import controlador.plc_tu.utilidades.UtilidadesRegistroC;
 import modelo.plc_mms.sop_rmi.IGestionPlcTu;

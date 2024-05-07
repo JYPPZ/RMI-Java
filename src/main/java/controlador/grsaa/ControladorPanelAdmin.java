@@ -1,5 +1,6 @@
-package controlador;
+package controlador.grsaa;
 
+import controlador.plc_tu.ControladorConsultar;
 import controlador.grsaa.utilidades.UtilidadesRegistroC;
 import modelo.grsaa.sop_rmi.IGestionConsumoPlc;
 import modelo.plc_mms.dto.UsuarioDTO;
@@ -19,14 +20,11 @@ import java.util.logging.Logger;
 public class ControladorPanelAdmin implements ActionListener {
     private IGestionConsumoPlc gestionConsumoPlc;//objeto remoto 3
     private final UsuarioDTO user;
-    private ConsultarGrsaa consultarGrsaaForm;
-    private EliminarPlcGrsaa eliminarPlcGrsaaForm;
-    private EditarPlcGrsaa editarPlcGrsaaForm;
-    private PanelAdmin panelAdminForm;
+    private final ConsultarGrsaa consultarGrsaaForm;
+    private final EliminarPlcGrsaa eliminarPlcGrsaaForm;
+    private final EditarPlcGrsaa editarPlcGrsaaForm;
+    private final PanelAdmin panelAdminForm;
 
-    public ControladorPanelAdmin(UsuarioDTO user) {
-        this.user = user;
-    }
 
     public ControladorPanelAdmin(UsuarioDTO user, ConsultarGrsaa consultarGrsaaForm, EliminarPlcGrsaa eliminarPlcGrsaaForm,
                                  EditarPlcGrsaa editarPlcGrsaaForm, PanelAdmin panelAdminForm) throws RemoteException {
@@ -104,6 +102,6 @@ public class ControladorPanelAdmin implements ActionListener {
 
         gestionConsumoPlc = (IGestionConsumoPlc) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry, numPuertoRMIRegistry,
                 "GestionConsumoPlc");
-        JOptionPane.showMessageDialog(null, "Hola esta es una prueBa " + user.getCallback().getMensaje());
+        JOptionPane.showMessageDialog(null, user.getCallback().getMensaje());
     }
 }

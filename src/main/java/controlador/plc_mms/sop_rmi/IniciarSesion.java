@@ -1,6 +1,14 @@
 package controlador.plc_mms.sop_rmi;
 
-import controlador.*;
+import controlador.ControladorConsultarActual;
+import controlador.ControladorConsultarMes;
+import controlador.ControladorConsultarUsuario;
+import controlador.ControladorPanelUsuario;
+import controlador.grsaa.ControladorConsultarGrsaa;
+import controlador.grsaa.ControladorEditarGrsaa;
+import controlador.grsaa.ControladorEliminarGrsaa;
+import controlador.grsaa.ControladorPanelAdmin;
+import controlador.plc_tu.*;
 import controlador.plc_tu.sop_rmi.CallBackImp;
 import controlador.plc_tu.utilidades.UtilidadesRegistroC;
 import modelo.plc_mms.dto.UsuarioDTO;
@@ -17,13 +25,14 @@ public class IniciarSesion implements ActionListener {
     private static IGestionUsuarios gestionUsuarios; //obj remoto 1
     private final PanelCeo panelCeoForm;
     private final PanelAdmin panelAdminForm;
-
+    private final PanelUsuario panelUsuarioForm;
     public IniciarSesion(ClienteSesion clienteSesionForm, PanelCeo panelCeoForm,
-                         PanelAdmin panelAdminForm) throws RemoteException {
+                         PanelAdmin panelAdminForm, PanelUsuario panelUsuarioForm) throws RemoteException {
         //gestionUsuarios = new GestionUsuariosImp();
         this.clienteSesionForm = clienteSesionForm;
         this.panelCeoForm = panelCeoForm;
         this.panelAdminForm = panelAdminForm;
+        this.panelUsuarioForm = panelUsuarioForm;
         this.clienteSesionForm.btnIniciarSesion.addActionListener(this);
         this.clienteSesionForm.btnSalir.addActionListener(this);
         // iniciar objeto remoto
@@ -33,6 +42,7 @@ public class IniciarSesion implements ActionListener {
     /**
      * Ventanas y controladores necesarios para iniciar aplicacion
      */
+    // ventanas necesarias por parte de admin
     ConsultarGrsaa consultarGrsaaForm = new ConsultarGrsaa();
     EliminarPlcGrsaa eliminarPlcGrsaaForm = new EliminarPlcGrsaa();
     EditarPlcGrsaa editarPlcGrsaaForm = new EditarPlcGrsaa();
@@ -41,6 +51,9 @@ public class IniciarSesion implements ActionListener {
     EditarPlc editarPlcForm = new EditarPlc(); // Vista Editar PLC
     EliminarPlc eliminarPlcForm = new EliminarPlc(); // Vista Eliminar PLC
     ConsultarPlc consultarPlcForm = new ConsultarPlc(); // Vista Consultar PLC
+    //ventanas necesarias usuario
+    ConsultarMes consultarMesForm = new ConsultarMes();
+    ConsultarActual consultarActualForm = new ConsultarActual();
     // Controlador Ceo
     ControladorPanelCeo controladorPanelCeo; //obj remoto 2
     ControladorRegistrar controladorRegistrar;
@@ -52,7 +65,11 @@ public class IniciarSesion implements ActionListener {
     ControladorConsultarGrsaa controladorConsultarGrsaa;
     ControladorEditarGrsaa controladorEditarGrsaa;
     ControladorEliminarGrsaa controladorEliminarGrsaa;
-
+    // controladores Usuario
+    ControladorPanelUsuario controladorPanelUsuario;
+    ControladorConsultarMes controladorConsultarMes;
+    ControladorConsultarActual controladorConsultarActual;
+    ControladorConsultarUsuario controladorConsultarUsuario;
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == clienteSesionForm.btnIniciarSesion) {
@@ -79,22 +96,23 @@ public class IniciarSesion implements ActionListener {
 
             UsuarioDTO userIn = gestionUsuarios.consultarUsuario(id);
             if (userIn != null && userIn.getUsuario().equals(user)) {
-                UsuarioDTO usuario = new UsuarioDTO(id, user, pass);
-                usuario.setCallback(new CallBackImp());
-                //capturarOR = new CapturarOR(usuario);
-                //capturarOR.setUsuario(usuario);
-                int sesion = gestionUsuarios.abrirSesion(usuario);
+                int sesion = gestionUsuarios.abrirSesion(userIn);
 
                 switch (sesion) {
                     case 1 -> {
                         panelAdminForm.setVisible(true);
-                        controladorPanelAdmin = new ControladorPanelAdmin(usuario, consultarGrsaaForm, eliminarPlcGrsaaForm, editarPlcGrsaaForm, panelAdminForm);
+                        controladorPanelAdmin = new ControladorPanelAdmin(userIn, consultarGrsaaForm, eliminarPlcGrsaaForm, editarPlcGrsaaForm, panelAdminForm);
                         controladorConsultarGrsaa = new ControladorConsultarGrsaa(controladorPanelAdmin.getGestionConsumoPlc(), consultarGrsaaForm);
                         controladorEditarGrsaa = new ControladorEditarGrsaa(controladorPanelAdmin.getGestionConsumoPlc(), editarPlcGrsaaForm);
                         controladorEliminarGrsaa = new ControladorEliminarGrsaa(controladorPanelAdmin.getGestionConsumoPlc(), eliminarPlcGrsaaForm);
                     }
                     case 2 -> {
-                        JOptionPane.showMessageDialog(null, "Acceso no implementado aún.");
+                        panelUsuarioForm.setVisible(true);
+                        controladorPanelUsuario = new ControladorPanelUsuario(userIn, panelUsuarioForm, consultarMesForm, consultarActualForm, consultarPlcForm);
+                        controladorConsultarActual = new ControladorConsultarActual(controladorPanelUsuario.getGestionPlcTu(), controladorPanelUsuario.getGestionUsuarios(), consultarActualForm);
+                        controladorConsultarMes = new ControladorConsultarMes(controladorPanelUsuario.getGestionPlcTu(), controladorPanelUsuario.getGestionUsuarios(), consultarMesForm);
+                        controladorConsultarUsuario = new ControladorConsultarUsuario(controladorPanelUsuario.getGestionPlcTu(), consultarPlcForm);
+                        clienteSesionForm.setVisible(false);
                     }
                     default -> {
                         panelCeoForm.setVisible(true);
@@ -103,7 +121,6 @@ public class IniciarSesion implements ActionListener {
                         controladorConsultar = new ControladorConsultar(ControladorPanelCeo.getGestionPlcTu(), gestionUsuarios, consultarPlcForm);
                         controladorEditar = new ControladorEditar(ControladorPanelCeo.getGestionPlcTu(), editarPlcForm);
                         controladorEliminar = new ControladorEliminar(eliminarPlcForm, ControladorPanelCeo.getGestionPlcTu());
-
                     }
                 };
             } else {

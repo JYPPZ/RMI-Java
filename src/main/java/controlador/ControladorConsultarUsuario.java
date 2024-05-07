@@ -8,22 +8,16 @@ import vista.ConsultarPlc;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ControladorConsultar implements ActionListener {
+public class ControladorConsultarUsuario implements ActionListener {
     private final IGestionPlcTu gestionPlcTu;
-    private final IGestionUsuarios gestionUsuarios;
     private final ConsultarPlc consultarPlcForm;
 
-    public ControladorConsultar(IGestionPlcTu gestionPlcTu, IGestionUsuarios gestionUsuarios, ConsultarPlc consultarPlcForm) {
+    public ControladorConsultarUsuario(IGestionPlcTu gestionPlcTu, ConsultarPlc consultarPlcForm) {
         this.gestionPlcTu = gestionPlcTu;
-        this.gestionUsuarios = gestionUsuarios;
         this.consultarPlcForm = consultarPlcForm;
         // action listeners
         consultarPlcForm.btnConsultar.addActionListener(this);
@@ -59,11 +53,8 @@ public class ControladorConsultar implements ActionListener {
             consultarPlcForm.lblEstrato.setText(String.valueOf(plcTu.getEstrato()));
             consultarPlcForm.lblFecha.setText(plcTu.getFechaRegistro());
             consultarPlcForm.lblLectura.setText(String.valueOf(plcTu.getLectura()));
-
-            // Enviar mensaje al usuario
-            gestionUsuarios.enviarMensaje("Usuario id= " + 0 +" consulta PLC_TU con id:" + idPlc,0);
         } catch (RemoteException ex) {
-            Logger.getLogger(ControladorConsultar.class.getName()).log(Level.SEVERE, "Error al consultar PLC");
+            Logger.getLogger(ControladorConsultarUsuario.class.getName()).log(Level.SEVERE, "Error al consultar PLC");
             JOptionPane.showMessageDialog(null, "No se pudo consultar el PLC", "Error", JOptionPane.ERROR_MESSAGE);
         }catch (Exception exception){
             JOptionPane.showMessageDialog(null,  "Error -> "  + exception.getLocalizedMessage());

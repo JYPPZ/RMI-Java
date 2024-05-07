@@ -1,7 +1,5 @@
 package vista;
 
-import controlador.ControladorConsultar;
-
 import javax.swing.*;
 
 public class ConsultarPlc extends JFrame {
