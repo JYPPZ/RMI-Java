@@ -14,12 +14,12 @@ import java.rmi.RemoteException;
 
 public class IniciarSesion implements ActionListener {
     private final ClienteSesion clienteSesionForm;
-    private final PanelCeo panelCeoForm;
     private static IGestionUsuarios gestionUsuarios; //obj remoto 1
+    private final PanelCeo panelCeoForm;
     private final PanelAdmin panelAdminForm;
-    private UsuarioDTO usuario;
 
-    public IniciarSesion(ClienteSesion clienteSesionForm, PanelCeo panelCeoForm, PanelAdmin panelAdminForm) throws RemoteException {
+    public IniciarSesion(ClienteSesion clienteSesionForm, PanelCeo panelCeoForm,
+                         PanelAdmin panelAdminForm) throws RemoteException {
         //gestionUsuarios = new GestionUsuariosImp();
         this.clienteSesionForm = clienteSesionForm;
         this.panelCeoForm = panelCeoForm;
@@ -30,20 +30,33 @@ public class IniciarSesion implements ActionListener {
         iniciar();
     }
 
-    public UsuarioDTO getUsuario() {
-        return usuario;
-    }
+    /**
+     * Ventanas y controladores necesarios para iniciar aplicacion
+     */
+    ConsultarGrsaa consultarGrsaaForm = new ConsultarGrsaa();
+    EliminarPlcGrsaa eliminarPlcGrsaaForm = new EliminarPlcGrsaa();
+    EditarPlcGrsaa editarPlcGrsaaForm = new EditarPlcGrsaa();
+    // ventanas necesarias por parte del Ceo
+    AgregarPlc agregarPlcForm = new AgregarPlc(); // Vista Agregar PLC
+    EditarPlc editarPlcForm = new EditarPlc(); // Vista Editar PLC
+    EliminarPlc eliminarPlcForm = new EliminarPlc(); // Vista Eliminar PLC
+    ConsultarPlc consultarPlcForm = new ConsultarPlc(); // Vista Consultar PLC
+    // Controlador Ceo
+    ControladorPanelCeo controladorPanelCeo; //obj remoto 2
+    ControladorRegistrar controladorRegistrar;
+    ControladorConsultar controladorConsultar;
+    ControladorEditar controladorEditar;
+    ControladorEliminar controladorEliminar;
+    // controladores Admin
+    ControladorPanelAdmin controladorPanelAdmin;
+    ControladorConsultarGrsaa controladorConsultarGrsaa;
+    ControladorEditarGrsaa controladorEditarGrsaa;
+    ControladorEliminarGrsaa controladorEliminarGrsaa;
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == clienteSesionForm.btnIniciarSesion) {
-            //abrirSesion();
-            System.out.println(abrirSesion());
-            try {
-                ControladorPanelAdmin controladorPanelAdmin = new ControladorPanelAdmin(abrirSesion());
-            } catch (RemoteException ex) {
-                throw new RuntimeException(ex);
-            }
+            abrirSesion();
         }
         if (e.getSource() == clienteSesionForm.btnSalir) {
             System.exit(0);
@@ -53,7 +66,7 @@ public class IniciarSesion implements ActionListener {
     /**
      * Método para abrir sesión en el sistema.
      */
-    public UsuarioDTO abrirSesion() {
+    private void abrirSesion() {
         try {
             int id = Integer.parseInt(clienteSesionForm.tfIde.getText());
             String user = clienteSesionForm.tfUsuario.getText();
@@ -61,76 +74,54 @@ public class IniciarSesion implements ActionListener {
 
             if (user.isEmpty() || pass.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Usuario y contraseña no pueden estar vacíos.");
-                return null;
+                return;
             }
 
             UsuarioDTO userIn = gestionUsuarios.consultarUsuario(id);
             if (userIn != null && userIn.getUsuario().equals(user)) {
-                usuario = new UsuarioDTO(id, user, pass);  // Asegúrate de que el constructor de UsuarioDTO esté correctamente definido.
+                UsuarioDTO usuario = new UsuarioDTO(id, user, pass);
                 usuario.setCallback(new CallBackImp());
-                gestionUsuarios.registrarUsuario(usuario);
+                //capturarOR = new CapturarOR(usuario);
+                //capturarOR.setUsuario(usuario);
                 int sesion = gestionUsuarios.abrirSesion(usuario);
+
                 switch (sesion) {
-                    case 1:
+                    case 1 -> {
                         panelAdminForm.setVisible(true);
-                        return usuario;
-                    case 2:
+                        controladorPanelAdmin = new ControladorPanelAdmin(usuario, consultarGrsaaForm, eliminarPlcGrsaaForm, editarPlcGrsaaForm, panelAdminForm);
+                        controladorConsultarGrsaa = new ControladorConsultarGrsaa(controladorPanelAdmin.getGestionConsumoPlc(), consultarGrsaaForm);
+                        controladorEditarGrsaa = new ControladorEditarGrsaa(controladorPanelAdmin.getGestionConsumoPlc(), editarPlcGrsaaForm);
+                        controladorEliminarGrsaa = new ControladorEliminarGrsaa(controladorPanelAdmin.getGestionConsumoPlc(), eliminarPlcGrsaaForm);
+                    }
+                    case 2 -> {
                         JOptionPane.showMessageDialog(null, "Acceso no implementado aún.");
-                        return null;
-                    default:
+                    }
+                    default -> {
                         panelCeoForm.setVisible(true);
-                        return usuario;
-                }
+                        controladorPanelCeo = new ControladorPanelCeo(panelCeoForm, agregarPlcForm, consultarPlcForm, editarPlcForm, eliminarPlcForm); //obj remoto 2
+                        controladorRegistrar = new ControladorRegistrar(agregarPlcForm, ControladorPanelCeo.getGestionPlcTu(), gestionUsuarios);
+                        controladorConsultar = new ControladorConsultar(ControladorPanelCeo.getGestionPlcTu(), gestionUsuarios, consultarPlcForm);
+                        controladorEditar = new ControladorEditar(ControladorPanelCeo.getGestionPlcTu(), editarPlcForm);
+                        controladorEliminar = new ControladorEliminar(eliminarPlcForm, ControladorPanelCeo.getGestionPlcTu());
+
+                    }
+                };
             } else {
                 JOptionPane.showMessageDialog(null, "Usuario no encontrado o contraseña incorrecta.");
-                return null;
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "ID de usuario debe ser numérico.");
         } catch (RemoteException e) {
             JOptionPane.showMessageDialog(null, "Error de conexión: " + e.getMessage());
-        } //catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "Error inesperado: " + e.getMessage());
-//        }
-        return null;
+        }
     }
 
-    public void iniciar(){
+    private void iniciar(){
         // Se obtiene el objeto remoto
         String direccionIpRMIRegistry = "localhost";
         int numPuertoRMIRegistry = 2024;
         gestionUsuarios = (IGestionUsuarios) UtilidadesRegistroC.obtenerObjRemoto(direccionIpRMIRegistry,
                 numPuertoRMIRegistry, "GestionUsuarios");
-    }
-
-    public static void main(String[] args) throws RemoteException {
-        // Se crean los objetos necesarios
-        ClienteSesion clienteSesionForm = new ClienteSesion();
-        // Se muestra la ventana de inicio de sesión
-        clienteSesionForm.setVisible(true);
-        PanelCeo panelCeoForm = new PanelCeo(); // panel Ceo
-        PanelAdmin panelAdminForm = new PanelAdmin();
-        AgregarPlc agregarPlcForm = new AgregarPlc();
-        EditarPlc editarPlcForm = new EditarPlc();
-        EliminarPlc eliminarPlcForm = new EliminarPlc();
-        //IGestionPlcTu gestionPlcTuImp = new GestionPlcTuImp(); // usar esta en gestion de usuario
-        //GestionUsuariosImp gestionUsuariosImp = new GestionUsuariosImp();
-        ConsultarPlc consultarPlcForm = new ConsultarPlc();
-        // controladores necesarios
-        // Admin
-        IniciarSesion iniciarSesion = new IniciarSesion(clienteSesionForm, panelCeoForm, panelAdminForm);
-
-//        System.out.println(iniciarSesion.abrirSesion());
-//        ControladorPanelAdmin controladorPanelAdmin = new ControladorPanelAdmin(iniciarSesion.abrirSesion());
-
-        //oper
-        ControladorPanelCeo controladorPanelCeo = new ControladorPanelCeo(panelCeoForm, agregarPlcForm,
-                consultarPlcForm, editarPlcForm, eliminarPlcForm); //obj remoto 2
-        ControladorRegistrar controladorRegistrar = new ControladorRegistrar(agregarPlcForm, ControladorPanelCeo.getGestionPlcTu(), gestionUsuarios);
-        ControladorConsultar controladorConsultar = new ControladorConsultar(ControladorPanelCeo.getGestionPlcTu(), gestionUsuarios, consultarPlcForm);
-        ControladorEditar controladorEditar = new ControladorEditar(ControladorPanelCeo.getGestionPlcTu(), editarPlcForm);
-        ControladorEliminar controladorEliminar = new ControladorEliminar(eliminarPlcForm, ControladorPanelCeo.getGestionPlcTu());
-
     }
 
 }

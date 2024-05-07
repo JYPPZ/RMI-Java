@@ -8,7 +8,6 @@ public class EditarPlc extends JFrame {
     public JComboBox<String> cmbId;
     public JButton btnGuardar;
     public JButton btnVolver;
-    public JTextField tfConsumo;
     public JTextField tfNombre;
     public JTextField tfNumeroIdentificacion;
     public JTextField tfDireccion;

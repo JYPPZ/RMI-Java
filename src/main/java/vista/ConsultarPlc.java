@@ -12,7 +12,6 @@ public class ConsultarPlc extends JFrame {
     public JLabel lblEstrato;
     public JLabel lblFecha;
     public JLabel lblLectura;
-    public JLabel lblConsumo;
     public JComboBox<String> cmbId;
     public JButton btnConsultar;
     public JButton btnVolver;
@@ -23,7 +22,5 @@ public class ConsultarPlc extends JFrame {
         setSize(350, 320);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(PanelConsultarPlc);
-//        ControladorConsultar controlador = new ControladorConsultar(null, null, this);
-//        controlador.cargarIdPlc();
     }
 }

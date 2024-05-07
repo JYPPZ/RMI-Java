@@ -38,6 +38,10 @@ public class ControladorPanelCeo implements ActionListener {
         iniciar();
     }
 
+    /**
+     * Método para obtener el objeto remoto
+     * @return Objeto remoto
+     */
     public static IGestionPlcTu getGestionPlcTu() {
         return gestionPlcTu;
     }

@@ -48,7 +48,7 @@ public class ControladorConsultar implements ActionListener {
             // Obtener el ID del PLC seleccionado
             String idPlc = (String) consultarPlcForm.cmbId.getSelectedItem();
 
-            // Consultar el PLC con el ID seleccionado
+            // Consultar el PLC con el ID deselection
             PlcTuDTO plcTu = gestionPlcTu.consultar(idPlc);
 
             // Mostrar los datos del PLC en los campos de texto

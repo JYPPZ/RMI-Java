@@ -8,6 +8,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import modelo.grsaa.dto.FacturacionDTO;
 import modelo.plc_mms.dto.PlcTuDTO;
 import modelo.grsaa.sop_rmi.IGestionConsumoPlc;
@@ -35,28 +38,43 @@ public class GestionConsumoPlc extends UnicastRemoteObject implements IGestionCo
         return this.listaPlcs;
     }
 
+    /**}
+     * Guarda un objeto PlcTuDTO en un archivo de texto.
+     * @param id Identificador del PLC a guardar
+     * @throws RemoteException Excepción de conexión
+     */
     @Override
     public void guardarTxt(String id) throws RemoteException {
-        String rutaDirectorio = "src/main/java/txts/";
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("El identificador no puede ser nulo o vacío");
+        }
+
         PlcTuDTO objeto = consultar(id);
         String digitos = objeto.getId().substring(objeto.getId().length() - 2);
         String nombreArchivo = "id" + String.format("%02d", 1) + "_" + "id" + digitos + ".txt";
+        String rutaDirectorio = "src/main/java/txts/";
         try {
-            File archivo = new File(rutaDirectorio + nombreArchivo);
-            FileWriter escritor = new FileWriter(archivo);
-            escritor.write("ID: " + objeto.getId() + "\n");
-            escritor.write("Nombre propietario: " + objeto.getNombrePropetario() + "\n");
-            escritor.write("Tipo Id:" + objeto.getTipoId() + "\n");
-            escritor.write("Numero de identificación" + objeto.getNumId() + "\n");
-            escritor.write("Dirección:" + objeto.getDireccionResidencia() + "\n");
-            escritor.write("Estrato:" + objeto.getEstrato() + "\n");
-            escritor.write("Fecha: " + objeto.getFechaRegistro() + "\n");
-            escritor.write("Lectura: " + objeto.getLectura() + "\n");
+            FileWriter escritor = getFileWriter(rutaDirectorio, nombreArchivo, objeto);
             escritor.close();
-            System.out.println("Objeto guardado en " + nombreArchivo);
+            System.out.println("Objeto guardado en: " + nombreArchivo);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(GestionConsumoPlc.class.getName()).log(Level.SEVERE, "Error al guardar el archivo", e);
         }
+    }
+
+    private static FileWriter getFileWriter(String rutaDirectorio, String nombreArchivo, PlcTuDTO objeto) throws IOException {
+        File archivo = new File(rutaDirectorio + nombreArchivo);
+        FileWriter escritor = new FileWriter(archivo);
+
+        escritor.write("ID: " + objeto.getId() + "\n");
+        escritor.write("Nombre propietario: " + objeto.getNombrePropetario() + "\n");
+        escritor.write("Tipo Id: " + objeto.getTipoId() + "\n");
+        escritor.write("Numero de identificación: " + objeto.getNumId() + "\n");
+        escritor.write("Dirección: " + objeto.getDireccionResidencia() + "\n");
+        escritor.write("Estrato: " + objeto.getEstrato() + "\n");
+        escritor.write("Fecha: " + objeto.getFechaRegistro() + "\n");
+        escritor.write("Lectura: " + objeto.getLectura() + "\n");
+        return escritor;
     }
 
     @Override

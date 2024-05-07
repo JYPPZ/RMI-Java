@@ -29,6 +29,9 @@ public class ControladorEliminar implements ActionListener {
         }
     }
 
+    /**
+     * Método para eliminar un PLC
+     */
     private void eliminarPlc() {
         try {
             String idPlc = (String) eliminarPlcForm.cmbId.getSelectedItem();

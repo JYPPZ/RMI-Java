@@ -68,13 +68,12 @@ public class GestionUsuariosImp extends UnicastRemoteObject implements IGestionU
 
     @Override
     public synchronized boolean registrarUsuario(UsuarioDTO usuario) throws RemoteException {
-        System.out.println("registrarUsuario()");
-        if (usuariosRegistrados.containsKey(usuario.getId()) &&
-                usuariosRegistrados.put(usuario.getId(), usuario) == null) {
+        //System.out.println("registrarUsuario()");
+        if (usuariosRegistrados.containsKey(usuario.getId()) /*&&
+                usuariosRegistrados.put(usuario.getId(), usuario) == null*/) {
             JOptionPane.showMessageDialog(null, "Usuario ya registrado");
             return false;
         }
-        //usuariosRegistrados.put(usuario.getId(), usuario);
         return true;
     }
 

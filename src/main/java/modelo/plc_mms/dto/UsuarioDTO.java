@@ -71,4 +71,15 @@ public class UsuarioDTO implements Serializable {
         this.callback = callback;
     }
 
+
+    @Override
+    public String toString() {
+        return "UsuarioDTO{" +
+                "id=" + id +
+                ", nombreCompleto='" + nombreCompleto + '\'' +
+                ", usuario='" + usuario + '\'' +
+                ", clave='" + clave + '\'' +
+                ", callback=" + callback +
+                '}';
+    }
 }
