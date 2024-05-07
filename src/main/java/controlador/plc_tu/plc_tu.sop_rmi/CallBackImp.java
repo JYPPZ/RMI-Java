@@ -1,4 +1,4 @@
-package controlador.plc_tu.sop_rmi;
+package controlador.plc_tu.plc_tu.sop_rmi;
 
 import modelo.plc_tu.sop_rmi.ICallback;
 import java.rmi.RemoteException;
